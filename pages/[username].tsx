@@ -9,72 +9,93 @@ import Layout from '../components/Layout/Layout';
 import PostComment from '../components/Post/PostComment';
 import ProfileHeader from '../components/Profile/ProfileHeader';
 import Image from 'next/image';
+import Post from '../components/Post/Post';
+import { wrapper } from '../redux/store';
+import { fetchPost } from '../redux/reducers/postSlice';
+import { useSelector } from 'react-redux';
+import { fetchMyPosts } from '../redux/reducers/postsSlice';
+import { addMe } from '../redux/reducers/authSlice';
+import CircularProgress from '../components/Common/CircularProgress';
 
 function Profile({ data, error }) {
     const router = useRouter();
     const { username } = router.query;
 
-    const [posts, setPosts] = useState([]);
+    const [myPosts, setMyPosts] = useState([]);
     const [loading, setLoading] = useState(false);
-    console.log(posts);
 
     if (error) {
         return <NoProfile />
     }
 
+    if (loading) {
+        return <CircularProgress />
+    }
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const res = await axios.get(`${baseUrl}/profile/posts/${username}`, { headers: { Authorization: getToken() } })
-                setPosts(res.data);
-                console.log(res.data);
+                setMyPosts(res.data);
 
             } catch (error) {
                 console.log(error);
             }
         }
         fetchData()
-    }, [])
+    }, [username])
 
     return (
         <Layout>
-            <p>wqit</p>
-            {/* <ProfileHeader />
-            <h1 className='font-light' >Profile: {username}</h1>
-            {
-                posts.map(post => (
-                    <div key={post._id}>
-                        <Image src={post.owner.avatar} width={50} height={50} className='rounded-full' />
-                        <h2>{post.owner.name} : {post.content}</h2>
+            <div className='rounded-xl p-5 flex space-x-5 border-2 shadow-md' >
+                <Image
+                    src={data.profile.owner.avatar}
+                    width={125}
+                    height={125}
+                    className='rounded'
+                />
+                <div className='flex-col' >
+                    <p>{data.profile.owner.name}</p>
+                    <div className='flex items-center'>
+                        <p className='font-mono font-light m-5'> followers:  {data.followersLength}</p>
+                        <span className='font-mono font-light m-5'>|</span>
+                        <p className='font-mono font-light m-5'> following: {data.followingLength}</p>
                     </div>
-                    // <PostComment post={post} />
-                ))
-            } */}
+                </div>
+            </div>
+            <Post posts={myPosts} />
         </Layout>
     )
 }
 
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//     try {
-//         let token = getToken(context);
-//         const { username } = context.query;
 
-//         const res = await axios.get(`${baseUrl}/profile/${username}`, { headers: { Authorization: token } });
-//         console.log(res.data);
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(store => async (context) => {
+    let token = getToken(context);
+    try {
 
-//         return {
-//             props: {
-//                 data: res.data
-//             }
-//         }
-//     } catch (error) {
-//         return {
-//             props: {
-//                 error
-//             }
-//         }
-//     }
-// }
+        const { username } = context.query;
+
+        const res = await axios.get(`${baseUrl}/profile/${username}`, { headers: { Authorization: token } });
+
+        const me = await axios.get(`${baseUrl}/auth`, { headers: { authorization: token } });
+
+        const { user, userFollowStats } = me.data;
+
+        let pageProps = { user, userFollowStats }
+        store.dispatch(addMe(pageProps))
+
+        return {
+            props: {
+                data: res.data
+            }
+        }
+    } catch (error) {
+        return {
+            props: {
+                error
+            }
+        }
+    }
+});
 
 export default Profile

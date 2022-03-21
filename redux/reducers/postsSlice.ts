@@ -17,6 +17,9 @@ export const postsSlice = createSlice({
     fetchPosts: (state, action) => {
       state.posts = action.payload
     },
+    fetchMyPosts: (state, action) => {
+      state.posts = action.payload
+    },
     deleteOnePost: (state, action) => {
       
       state.posts = state.posts.filter(post => post._id !== action.payload._id);
@@ -37,7 +40,6 @@ export const postsSlice = createSlice({
       })
     },
     showComments: (state, action) => {
-      console.log(action);
       
       state.posts.map(post => {
         if (post._id === action.payload.postId) {
@@ -61,5 +63,5 @@ export const postsSlice = createSlice({
   },
 })
 
-export const { fetchPosts, deleteOnePost, likeOnePost, unLikeOnePost, showComments, deleteComment } = postsSlice.actions
+export const { fetchPosts, deleteOnePost, likeOnePost, unLikeOnePost, showComments, deleteComment, fetchMyPosts } = postsSlice.actions
 export default postsSlice.reducer

@@ -1,9 +1,15 @@
+import { Chat } from '@mui/icons-material'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import avatar from '../../img/avatar.png'
 
-function SideChat() {
+function SideChat({ chats, connectedUsers }) {
+
+    console.log(chats);
+
+
+
     return (
         <>
             <form className="flex w-1/5 items-center space-x-1 pl-3 pb-1.5 bg-slate-100 z-10 fixed">
@@ -18,20 +24,23 @@ function SideChat() {
             </form>
             <div className='mt-14 flex flex-col' >
                 {
-                    [1, 2, 3, 4, 5, 6].map(item => (
-                        <Link href={`?message=${item}`}>
-                            <a key={item} className='flex space-x-3 px-3 py-3 cursor-pointer hover:bg-slate-200 border-b-2 relative'>
+                    chats.map((message) => (
+                        <Link key={message._id} href={`?message=${message.messageWith}`}>
+                            <a className='flex space-x-3 px-3 py-3 cursor-pointer hover:bg-slate-200 border-b-2 relative'>
                                 <Image
-                                    src={avatar}
+                                    src={message?.avatar}
                                     width={65}
                                     height={45}
+                                    className='rounded-full'
                                 />
                                 <div>
                                     <div className='py-2 flex items-center space-x-2'>
-                                        <p>username</p>
-                                        <div className='w-2 h-2 rounded-full bg-green-500' />
+                                        <p>{message.name}</p>
+                                        {
+                                            connectedUsers.length > 0 && connectedUsers.map(user => user.user_id).includes(message.messageWith) && <div className='w-2 h-2 rounded-full bg-green-500' />
+                                        }
                                     </div>
-                                    <span className='font-light text-sm'>username</span>
+                                    <span className='font-light text-sm'>{message.lastMessage}</span>
                                 </div>
 
                                 <span

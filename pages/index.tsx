@@ -21,14 +21,14 @@ import { getPosts } from '../API/Post'
 
 export default function Home() {
   const me = useSelector(state => state.auth);
-  const posts = useSelector<PostsState>((state) => state.posts);
-  console.log(me);
+  const { posts } = useSelector(state => state.posts)
+  console.log(posts);
 
 
   const [show, setShow] = useState(false);
 
 
-  if (posts.length > 1) return <NoPosts />
+  if (posts.length === 0) return <NoPosts />
 
   return (
     <div className="">
@@ -38,7 +38,7 @@ export default function Home() {
       </Head>
       <Layout>
         <CreatePost />
-        <Post />
+        <Post posts={posts} />
       </Layout>
     </div>
   )
@@ -65,7 +65,7 @@ export default function Home() {
 export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
 
   let token = getToken(ctx);
-  console.log(token);
+
   try {
     if (!token) {
       return {
@@ -90,7 +90,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx
 
     return {
       props: {
-        pageProps
+        posts
       }
     }
 

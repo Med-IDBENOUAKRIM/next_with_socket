@@ -13,12 +13,10 @@ import { wrapper } from '../../redux/store';
 import { baseUrl } from '../../utils/baseUrl';
 
 function PostPage({ post }) {
-    console.log(post);
 
     return (
         <Layout>
             <div className="relative mt-5 rounded-md border">
-
                 <PostInfo post={post} />
                 <CommentInput post={post} />
                 <PostComment post={post} />

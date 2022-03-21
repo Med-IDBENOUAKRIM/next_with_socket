@@ -1,4 +1,6 @@
+import { format } from 'date-fns'
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { deletePost, getAllLikes, likePost, unLikePost } from '../../API/Post'
@@ -17,6 +19,8 @@ import PostComment from './PostComment'
 
 function PostInfo({ post }) {
     const { user } = useSelector<AuthState>((state) => state.auth)
+    console.log(post);
+
     const dispatch = useDispatch()
 
 
@@ -31,10 +35,14 @@ function PostInfo({ post }) {
                     height={50}
                     className="rounded-full" />
                 <div className="flex flex-col space-x-2 px-3">
-                    <span className="text-base text-sky-500 ">{post.owner.name}</span>
-                    <span className="text-sm text-gray-700 ">time</span>
+                    <span className="text-base text-sky-500 ">
+                        <Link href={`/${post.owner.username}`} >
+                            {post.owner.name}
+                        </Link>
+                    </span>
+                    <span className="text-xs text-gray-500 ">{format(new Date(post.createdAt), 'MM/dd/yyyy')}</span>
                 </div>
-                {user._id === post.owner._id ? (
+                {user?._id === post.owner._id ? (
                     <span
                         onClick={() => {
                             deletePost(post._id, getToken())

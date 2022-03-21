@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, VoidFunctionComponent } from 'react'
 
-function ChatInput({ hanldeSendNewMsg }) {
+function ChatInput({ hanldeSendNewMsg }: any) {
   const [text, setText] = useState('');
 
-  const handleSubmit = e => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault()
     hanldeSendNewMsg(text)
     setText('')

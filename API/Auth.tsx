@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { baseUrl } from '../utils/baseUrl'
-import cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 import router from 'next/router'
 
 interface RegisterUser {
@@ -40,7 +40,9 @@ export const login = async ({ email, password }: LoginUser, setLoading: Function
 
   try {
     const res = await axios.post(`${baseUrl}/auth/signin`, { email, password })
-    cookies.set('token', res.data.token)
+    console.log(res.data.token);
+    
+    Cookies.set('token', res.data.token)
     router.push('/')
   } catch (error) {
     console.log(error)

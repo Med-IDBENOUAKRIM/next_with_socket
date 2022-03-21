@@ -15,8 +15,8 @@ import CommentInput from './CommentInput'
 import PostComment from './PostComment'
 import PostInfo from './PostInfo'
 
-function Post() {
-    let { posts } = useSelector<PostsState>((state) => state.posts)
+function Post({ posts }) {
+
     return (
         <>
             {posts.map((post: any) => (

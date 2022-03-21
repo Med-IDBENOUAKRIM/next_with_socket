@@ -41,6 +41,8 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     addMe: (state, action) => {
+      console.log(action);
+      
       state.user = action.payload
       state.userFollowStats = action.payload
     },
@@ -48,8 +50,6 @@ export const authSlice = createSlice({
 
   extraReducers: {
     [HYDRATE]: (state, action) => {
-      console.log(action);
-      
       state.user = action.payload.auth.user.user
       state.userFollowStats = action.payload.auth.user.userFollowStats
     },

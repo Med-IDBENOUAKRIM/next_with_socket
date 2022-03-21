@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 import { deleteOneComment } from '../../API/Post'
 import { getToken } from '../../helpers/sessions'
 import { deleteComment } from '../../redux/reducers/postsSlice'
+import Link from 'next/link'
 
 
 function PostComment({ post }) {
@@ -25,7 +26,15 @@ function PostComment({ post }) {
                                 height={35}
                                 className="rounded-full"
                             />
-                            <span className="text-base text-sky-500 ">{item.owner.name}</span>
+                            <span className="text-base text-sky-500 ">
+
+                                <Link href={`/${item.owner.username}`}  >
+
+                                    {item.owner.name}
+
+                                </Link>
+
+                            </span>
                             <span className="text-sm font-light text-gray-500 ">
                                 {format(new Date(item.date), 'MM/dd/yyyy')}</span>
 
